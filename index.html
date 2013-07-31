@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>My Octopress Blog</title>
-  <meta name="author" content="Your Name">
+  <title>No Dogma</title>
+  <meta name="author" content="Shane Holder">
 
   
-  <meta name="description" content=" Blog Archives Recent Posts ">
+  <meta name="description" content="It seems like I&rsquo;m constantly re-inventing the wheel when it comes to generating data for testing code. This week I needed roughly 50K records &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +21,7 @@
   <link rel="canonical" href="http://shaneholder.github.io">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+  <link href="/atom.xml" rel="alternate" title="No Dogma" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
@@ -36,9 +36,9 @@
 
 <body   >
   <header role="banner"><hgroup>
-  <h1><a href="/">My Octopress Blog</a></h1>
+  <h1><a href="/">No Dogma</a></h1>
   
-    <h2>A blogging framework for hackers.</h2>
+    <h2>Yeah, whatever.</h2>
   
 </hgroup>
 
@@ -66,6 +66,148 @@
       <div class="blog-index">
   
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/20/using-posh-to-generate-sample-data/">Using POSH to Generate Sample Data</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-20T14:44:00-05:00" pubdate data-updated="true">Jul 20<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It seems like I&rsquo;m constantly re-inventing the wheel when it comes to generating data for testing code.  This week I needed roughly 50K records containing names, dates and whether they were male or female names. Let&rsquo;s take a look at how PowerShell might be able to help us out.</p>
+
+<p>I started with a template of what the input to redis should look like <em>I&rsquo;m on Windows and redis &mdash;pipe does not work</em> so what I want looks something like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>hmset patient:^id^ lastName Doe firstName John birthDate 1/1/2012 appointment "2/2/2012 13:00"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will give me a hash in redis with the properties lastName, firstName, birthDate and appointment and the key to the hash will be patient:000001.  Since, I got my start in computers on Unix I&rsquo;m pretty familiar with shell scripting and doing this with bash was pretty easy.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>for f in {1..50000};
+</span><span class='line'>do printf -v id "%06d" $f;
+</span><span class='line'>cat patient | sed "s/|id|/$id/";
+</span><span class='line'>done | redis-cli</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and in PowerShell</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$f = gc ./patient; 0..50000 |
+</span><span class='line'>% { $x = "{0:D6}" -f $_; $f.replace("^id^", $x)} |
+</span><span class='line'>redis-cli</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ok, so maybe that&rsquo;s a bit cryptic let&rsquo;s break it down.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$f = get-content ./patient; # load the template into memory
+</span><span class='line'>0..50000 |             # generate an enumeration from 0 to 50000
+</span><span class='line'>% {                    # start a for-each 
+</span><span class='line'>$x = "{0:D6}" -f $_    # format the value from the enumeration
+</span><span class='line'>                       # prefixing with leading 0's
+</span><span class='line'>$f.replace("^id^", $x) # string replace the template 
+</span><span class='line'>                       # ^id^ with the formatted value
+</span><span class='line'>} |
+</span><span class='line'>redis-cli</span></code></pre></td></tr></table></div></figure>
+
+
+<p>At this point I&rsquo;m pretty excited but searching 50000 records of all the same first name and last name is pretty boring so how can I generate first names and last names?</p>
+
+<p>Not being the creative type, or having the patience I looked to the web for lists of names.  Fortunately the government knows my needs and publishes lists of popular names by decade. Here is the list for the <a href="http://www.ssa.gov/OACT/babynames/decades/names2000s.html">2000s</a>.  Now I just needed some last names, <a href="http://en.wikipedia.org/wiki/List_of_most_common_surnames_in_North_America">Wikipedia</a> handled this one for me.  There are larger lists at: <a href="http://ieproject.googlecode.com/svn/wiki/reference/Dataset/Dictionary/">ieproject.googlecode.com</a></p>
+
+<p>I took the lists of names and put them in 2 files, one for first names and one for last names.  The first name file contains the sex indicator.</p>
+
+<p>Now the fun part, how do I combine these together to import them into <a href="http://redis.io/">redis</a>.  Turns out PowerShell has a Get-Random command perfect&hellip; so I can load my names up into an array in PS and use get-random -maximum to index into them&hellip;but wait, further reading of the `Get-Random states:</p>
+
+<p>  You can use the parameters of Get-Random to specify a seed number, minimum and maximum values, <em>and the number of objects returned from a submitted collection.</em></p>
+
+<p>Does that mean what I think it does?</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$f=gc .\firstNames.txt
+</span><span class='line'>get-random $f
+</span><span class='line'>F BARBIE
+</span><span class='line'>get-random $f
+</span><span class='line'>M Ringo</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Woah, now that&rsquo;s cool.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$firstNames=gc -encoding utf8 .\firstNames.txt
+</span><span class='line'>$lastNames=gc -encoding utf8 .\lastNames.txt
+</span><span class='line'>$f = gc ./patient2
+</span><span class='line'>0..50000 | 
+</span><span class='line'>% { 
+</span><span class='line'>$x = "{0:D6}" -f $_ 
+</span><span class='line'>$firstName=(get-random $firstNames).split();
+</span><span class='line'>$f.replace("^id^",$x).
+</span><span class='line'>replace("^firstName^", $firstName[1]).
+</span><span class='line'>replace("^lastName^", (get-random $lastNames).
+</span><span class='line'>ToLower()).
+</span><span class='line'>replace("^sex^", $firstName[0])
+</span><span class='line'>} | redis-cli</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
     <a href="/blog/archives">Blog Archives</a>
@@ -77,6 +219,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/20/using-posh-to-generate-sample-data/">Using POSH to Generate Sample Data</a>
+      </li>
     
   </ul>
 </section>
@@ -91,7 +237,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Your Name -
+  Copyright &copy; 2013 - Shane Holder -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

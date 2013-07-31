@@ -1,24 +1,97 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[No Dogma]]></title>
-  <link href="http://shaneholder.github.io/atom.xml" rel="self"/>
-  <link href="http://shaneholder.github.io/"/>
-  <updated>2013-07-30T20:22:49-05:00</updated>
-  <id>http://shaneholder.github.io/</id>
-  <author>
-    <name><![CDATA[Shane Holder]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Using POSH to generate sample data - No Dogma</title>
+  <meta name="author" content="Shane Holder">
 
   
-  <entry>
-    <title type="html"><![CDATA[Using POSH to generate sample data]]></title>
-    <link href="http://shaneholder.github.io/blog/2013/07/20/using-posh-to-generate-sample-data/"/>
-    <updated>2013-07-20T14:44:00-05:00</updated>
-    <id>http://shaneholder.github.io/blog/2013/07/20/using-posh-to-generate-sample-data</id>
-    <content type="html"><![CDATA[<p>It seems like I&rsquo;m constantly re-inventing the wheel when it comes to generating data for testing code.  This week I needed roughly 50K records containing names, dates and whether they were male or female names. Let&rsquo;s take a look at how PowerShell might be able to help us out.</p>
+  <meta name="description" content="It seems like I&rsquo;m constantly re-inventing the wheel when it comes to generating data for testing code. This week I needed roughly 50K records &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://shaneholder.github.io/blog/2013/07/20/using-posh-to-generate-sample-data">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="No Dogma" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">No Dogma</a></h1>
+  
+    <h2>Yeah, whatever.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:shaneholder.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Using POSH to Generate Sample Data</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-20T14:44:00-05:00" pubdate data-updated="true">Jul 20<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>It seems like I&rsquo;m constantly re-inventing the wheel when it comes to generating data for testing code.  This week I needed roughly 50K records containing names, dates and whether they were male or female names. Let&rsquo;s take a look at how PowerShell might be able to help us out.</p>
 
 <p>I started with a template of what the input to redis should look like <em>I&rsquo;m on Windows and redis &mdash;pipe does not work</em> so what I want looks something like:</p>
 
@@ -125,7 +198,108 @@
 
 
 
-]]></content>
-  </entry>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-</feed>
+
+<span class="byline author vcard">Posted by <span class="fn">Shane Holder</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-20T14:44:00-05:00" pubdate data-updated="true">Jul 20<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/data-generation/'>data_generation</a>, <a class='category' href='/blog/categories/powershell/'>powershell,</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://shaneholder.github.io/blog/2013/07/20/using-posh-to-generate-sample-data/" data-via="" data-counturl="http://shaneholder.github.io/blog/2013/07/20/using-posh-to-generate-sample-data/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/20/using-posh-to-generate-sample-data/">Using POSH to Generate Sample Data</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Shane Holder -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
