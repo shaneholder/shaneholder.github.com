@@ -104,29 +104,31 @@
 
 <p>This will give me a hash in redis with the properties lastName, firstName, birthDate and appointment and the key to the hash will be patient:000001.  Since, I got my start in computers on Unix I&rsquo;m pretty familiar with shell scripting and doing this with bash was pretty easy.</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>for f in {1..50000};
-</span><span class='line'>do printf -v id "%06d" $f;
-</span><span class='line'>cat patient | sed "s/|id|/$id/";
-</span><span class='line'>done | redis-cli</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="k">for </span>f in <span class="o">{</span>1..50000<span class="o">}</span>;
+</span><span class='line'><span class="k">do </span><span class="nb">printf</span> -v id <span class="s2">&quot;%06d&quot;</span> <span class="nv">$f</span>;
+</span><span class='line'>cat patient | sed <span class="s2">&quot;s/|id|/$id/&quot;</span>;
+</span><span class='line'><span class="k">done</span> | redis-cli
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>and in PowerShell</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$f = gc ./patient; 0..50000 |
-</span><span class='line'>% { $x = "{0:D6}" -f $_; $f.replace("^id^", $x)} |
-</span><span class='line'>redis-cli</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='powershell'><span class='line'><span class="nv">$f</span> <span class="p">=</span> <span class="n">gc</span> <span class="p">./</span><span class="n">patient</span><span class="err">;</span> <span class="n">0</span><span class="p">..</span><span class="n">50000</span> <span class="p">|</span>
+</span><span class='line'><span class="p">%</span> <span class="p">{</span> <span class="nv">$x</span> <span class="p">=</span> <span class="s2">&quot;{0:D6}&quot;</span> <span class="o">-f</span> <span class="nv">$_</span><span class="err">;</span> <span class="nv">$f</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;^id^&quot;</span><span class="p">,</span> <span class="nv">$x</span><span class="p">)}</span> <span class="p">|</span>
+</span><span class='line'><span class="n">redis-cli</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Ok, so maybe that&rsquo;s a bit cryptic let&rsquo;s break it down.</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -135,15 +137,16 @@
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$f = get-content ./patient; # load the template into memory
-</span><span class='line'>0..50000 |             # generate an enumeration from 0 to 50000
-</span><span class='line'>% {                    # start a for-each 
-</span><span class='line'>$x = "{0:D6}" -f $_    # format the value from the enumeration
-</span><span class='line'>                       # prefixing with leading 0's
-</span><span class='line'>$f.replace("^id^", $x) # string replace the template 
-</span><span class='line'>                       # ^id^ with the formatted value
-</span><span class='line'>} |
-</span><span class='line'>redis-cli</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='powershell'><span class='line'><span class="nv">$f</span> <span class="p">=</span> <span class="nb">get-content</span> <span class="p">./</span><span class="n">patient</span><span class="err">;</span> <span class="c"># load the template into memory</span>
+</span><span class='line'><span class="n">0</span><span class="p">..</span><span class="n">50000</span> <span class="p">|</span>             <span class="c"># generate an enumeration from 0 to 50000</span>
+</span><span class='line'><span class="p">%</span> <span class="p">{</span>                    <span class="c"># start a for-each </span>
+</span><span class='line'><span class="nv">$x</span> <span class="p">=</span> <span class="s2">&quot;{0:D6}&quot;</span> <span class="o">-f</span> <span class="nv">$_</span>    <span class="c"># format the value from the enumeration</span>
+</span><span class='line'>                       <span class="c"># prefixing with leading 0&#39;s</span>
+</span><span class='line'><span class="nv">$f</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;^id^&quot;</span><span class="p">,</span> <span class="nv">$x</span><span class="p">)</span> <span class="c"># string replace the template </span>
+</span><span class='line'>                       <span class="c"># ^id^ with the formatted value</span>
+</span><span class='line'><span class="p">}</span> <span class="p">|</span>
+</span><span class='line'><span class="n">redis-cli</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>At this point I&rsquo;m pretty excited but searching 50000 records of all the same first name and last name is pretty boring so how can I generate first names and last names?</p>
@@ -152,27 +155,30 @@
 
 <p>I took the lists of names and put them in 2 files, one for first names and one for last names.  The first name file contains the sex indicator.</p>
 
-<p>Now the fun part, how do I combine these together to import them into <a href="http://redis.io/">redis</a>.  Turns out PowerShell has a Get-Random command perfect&hellip; so I can load my names up into an array in PS and use get-random -maximum to index into them&hellip;but wait, further reading of the `Get-Random states:</p>
+<p>Now the fun part, how do I combine these together to import them into <a href="http://redis.io/">redis</a>.  Turns out PowerShell has a <code>Get-Random</code> command perfect&hellip; so I can load my names up into an array in PS and use <code>Get-Random -maximum</code> to index into them&hellip;but wait, further reading of the <code>Get-Random</code> states:</p>
 
-<p>  You can use the parameters of Get-Random to specify a seed number, minimum and maximum values, <em>and the number of objects returned from a submitted collection.</em></p>
+<blockquote><p>You can use the parameters of Get-Random to specify a seed number,
+minimum and maximum values, <u>and the number of objects returned
+from a submitted collection.</u></p></blockquote>
 
 <p>Does that mean what I think it does?</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$f=gc .\firstNames.txt
-</span><span class='line'>get-random $f
-</span><span class='line'>F BARBIE
-</span><span class='line'>get-random $f
-</span><span class='line'>M Ringo</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='powershell'><span class='line'><span class="nv">$f</span><span class="p">=</span><span class="n">gc</span> <span class="p">.\</span><span class="n">firstNames</span><span class="p">.</span><span class="n">txt</span>
+</span><span class='line'><span class="nb">get-random</span> <span class="nv">$f</span>
+</span><span class='line'><span class="n">F</span> <span class="n">BARBIE</span>
+</span><span class='line'><span class="nb">get-random</span> <span class="nv">$f</span>
+</span><span class='line'><span class="n">M</span> <span class="n">Ringo</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Woah, now that&rsquo;s cool.</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -185,19 +191,20 @@
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$firstNames=gc -encoding utf8 .\firstNames.txt
-</span><span class='line'>$lastNames=gc -encoding utf8 .\lastNames.txt
-</span><span class='line'>$f = gc ./patient2
-</span><span class='line'>0..50000 | 
-</span><span class='line'>% { 
-</span><span class='line'>$x = "{0:D6}" -f $_ 
-</span><span class='line'>$firstName=(get-random $firstNames).split();
-</span><span class='line'>$f.replace("^id^",$x).
-</span><span class='line'>replace("^firstName^", $firstName[1]).
-</span><span class='line'>replace("^lastName^", (get-random $lastNames).
-</span><span class='line'>ToLower()).
-</span><span class='line'>replace("^sex^", $firstName[0])
-</span><span class='line'>} | redis-cli</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='powershell'><span class='line'><span class="nv">$firstNames</span><span class="p">=</span><span class="n">gc</span> <span class="n">-encoding</span> <span class="n">utf8</span> <span class="p">.\</span><span class="n">firstNames</span><span class="p">.</span><span class="n">txt</span>
+</span><span class='line'><span class="nv">$lastNames</span><span class="p">=</span><span class="n">gc</span> <span class="n">-encoding</span> <span class="n">utf8</span> <span class="p">.\</span><span class="n">lastNames</span><span class="p">.</span><span class="n">txt</span>
+</span><span class='line'><span class="nv">$f</span> <span class="p">=</span> <span class="n">gc</span> <span class="p">./</span><span class="n">patient2</span>
+</span><span class='line'><span class="n">0</span><span class="p">..</span><span class="n">50000</span> <span class="p">|</span>
+</span><span class='line'><span class="p">%</span> <span class="p">{</span>
+</span><span class='line'><span class="nv">$x</span> <span class="p">=</span> <span class="s2">&quot;{0:D6}&quot;</span> <span class="o">-f</span> <span class="nv">$_</span>
+</span><span class='line'><span class="nv">$firstName</span><span class="p">=(</span><span class="nb">get-random</span> <span class="nv">$firstNames</span><span class="p">).</span><span class="n">split</span><span class="p">()</span><span class="err">;</span>
+</span><span class='line'><span class="nv">$f</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;^id^&quot;</span><span class="p">,</span><span class="nv">$x</span><span class="p">).</span>
+</span><span class='line'><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;^firstName^&quot;</span><span class="p">,</span> <span class="nv">$firstName</span><span class="p">[</span><span class="n">1</span><span class="p">]).</span>
+</span><span class='line'><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;^lastName^&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nb">get-random</span> <span class="nv">$lastNames</span><span class="p">).</span>
+</span><span class='line'><span class="n">ToLower</span><span class="p">()).</span>
+</span><span class='line'><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;^sex^&quot;</span><span class="p">,</span> <span class="nv">$firstName</span><span class="p">[</span><span class="n">0</span><span class="p">])</span>
+</span><span class='line'><span class="p">}</span> <span class="p">|</span> <span class="n">redis-cli</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 

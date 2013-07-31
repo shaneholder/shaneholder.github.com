@@ -4,7 +4,7 @@
   <title><![CDATA[Category: data_generation | No Dogma]]></title>
   <link href="http://shaneholder.github.io/blog/categories/data-generation/atom.xml" rel="self"/>
   <link href="http://shaneholder.github.io/"/>
-  <updated>2013-07-30T20:22:49-05:00</updated>
+  <updated>2013-07-30T20:45:41-05:00</updated>
   <id>http://shaneholder.github.io/</id>
   <author>
     <name><![CDATA[Shane Holder]]></name>
@@ -28,25 +28,26 @@ hmset patient:^id^ lastName Doe firstName John birthDate 1/1/2012 appointment "2
 
 <p>This will give me a hash in redis with the properties lastName, firstName, birthDate and appointment and the key to the hash will be patient:000001.  Since, I got my start in computers on Unix I&rsquo;m pretty familiar with shell scripting and doing this with bash was pretty easy.</p>
 
-<p><code>
+<p><code>bash
 for f in {1..50000};
 do printf -v id "%06d" $f;
 cat patient | sed "s/|id|/$id/";
 done | redis-cli
 </code></p>
 
-<p>and in PowerShell
-<code>
+<p>and in PowerShell</p>
+
+<p><code>powershell
 $f = gc ./patient; 0..50000 |
 % { $x = "{0:D6}" -f $_; $f.replace("^id^", $x)} |
 redis-cli
 </code>
 Ok, so maybe that&rsquo;s a bit cryptic let&rsquo;s break it down.</p>
 
-<p>```
+<p>```powershell
 $f = get-content ./patient; # load the template into memory
 0..50000 |             # generate an enumeration from 0 to 50000
-% {                      # start a for-each
+% {                    # start a for-each
 $x = &ldquo;{0:D6}&rdquo; -f $_    # format the value from the enumeration</p>
 
 <pre><code>                   # prefixing with leading 0's
@@ -67,13 +68,15 @@ redis-cli
 
 <p>I took the lists of names and put them in 2 files, one for first names and one for last names.  The first name file contains the sex indicator.</p>
 
-<p>Now the fun part, how do I combine these together to import them into <a href="http://redis.io/">redis</a>.  Turns out PowerShell has a Get-Random command perfect&hellip; so I can load my names up into an array in PS and use get-random -maximum to index into them&hellip;but wait, further reading of the `Get-Random states:</p>
+<p>Now the fun part, how do I combine these together to import them into <a href="http://redis.io/">redis</a>.  Turns out PowerShell has a <code>Get-Random</code> command perfect&hellip; so I can load my names up into an array in PS and use <code>Get-Random -maximum</code> to index into them&hellip;but wait, further reading of the <code>Get-Random</code> states:</p>
 
-<p>  You can use the parameters of Get-Random to specify a seed number, minimum and maximum values, <em>and the number of objects returned from a submitted collection.</em></p>
+<blockquote><p>You can use the parameters of Get-Random to specify a seed number,
+minimum and maximum values, <u>and the number of objects returned
+from a submitted collection.</u></p></blockquote>
 
 <p>Does that mean what I think it does?</p>
 
-<p><code>
+<p><code>powershell
 $f=gc .\firstNames.txt
 get-random $f
 F BARBIE
@@ -82,7 +85,7 @@ M Ringo
 </code>
 Woah, now that&rsquo;s cool.</p>
 
-<p><code>
+<p><code>powershell
 $firstNames=gc -encoding utf8 .\firstNames.txt
 $lastNames=gc -encoding utf8 .\lastNames.txt
 $f = gc ./patient2
