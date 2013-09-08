@@ -4,7 +4,7 @@
   <title><![CDATA[Category: powershell | No Dogma]]></title>
   <link href="http://shaneholder.github.io/blog/categories/powershell/atom.xml" rel="self"/>
   <link href="http://shaneholder.github.io/"/>
-  <updated>2013-09-08T13:17:17-05:00</updated>
+  <updated>2013-09-08T15:30:01-05:00</updated>
   <id>http://shaneholder.github.io/</id>
   <author>
     <name><![CDATA[Shane Holder]]></name>
@@ -19,6 +19,9 @@
     <updated>2013-07-20T14:44:00-05:00</updated>
     <id>http://shaneholder.github.io/blog/2013/07/20/using-posh-to-generate-sample-data</id>
     <content type="html"><![CDATA[<p>It seems like I&rsquo;m constantly re-inventing the wheel when it comes to generating data for testing code.  This week I needed roughly 50K records containing names, dates and whether they were male or female names. Let&rsquo;s take a look at how PowerShell might be able to help us out.</p>
+
+<!-- more -->
+
 
 <p>I started with a template of what the input to redis should look like <em>I&rsquo;m on Windows and redis &mdash;pipe does not work</em> so what I want looks something like:</p>
 
